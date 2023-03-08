@@ -193,7 +193,6 @@ Dumpstate::Dumpstate()
     },
   mLogSections{
         { "radio", [this](int fd, const std::string &destDir) { dumpRadioLogs(fd, destDir); } },
-        { "camera", [this](int fd, const std::string &destDir) { dumpCameraLogs(fd, destDir); } },
   } {
 }
 
@@ -258,29 +257,8 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
 
 // Dump items related to display
 void Dumpstate::dumpDisplaySection(int fd) {
-    // Dump counters for decon drivers
-    const std::string decon_device_sysfs_path("/sys/class/drm/card0/device/");
-    for(int i = 0; i <= 2; ++i){
-        const std::string decon_num_str = std::to_string(i);
-        const std::string decon_counter_path = decon_device_sysfs_path +
-                                              "decon" + decon_num_str +
-                                              "/counters";
-        if (access(decon_counter_path.c_str(), R_OK) == 0){
-            DumpFileToFd(fd, "DECON-" + decon_num_str + " counters",
-                         decon_counter_path);
-        }
-        else{
-            ::android::base::WriteStringToFd("No counters for DECON-" +
-                decon_num_str + " found at path (" + decon_counter_path + ")\n",
-                fd);
-        }
-    }
-    DumpFileToFd(fd, "CRTC-0 event log", "/sys/kernel/debug/dri/0/crtc-0/event");
+    DumpFileToFd(fd, "DECON-1 counters /sys/class/drm/card0/device/decon1/counters", "/sys/class/drm/card0/device/decon1/counters");
     DumpFileToFd(fd, "CRTC-1 event log", "/sys/kernel/debug/dri/0/crtc-1/event");
-    RunCommandToFd(fd, "libdisplaycolor", {"/vendor/bin/dumpsys", "displaycolor", "-v"},
-                   CommandOptions::WithTimeout(2).Build());
-    DumpFileToFd(fd, "Primary panel name", "/sys/devices/platform/exynos-drm/primary-panel/panel_name");
-    DumpFileToFd(fd, "Primary panel extra info", "/sys/devices/platform/exynos-drm/primary-panel/panel_extinfo");
     DumpFileToFd(fd, "Secondary panel name", "/sys/devices/platform/exynos-drm/secondary-panel/panel_name");
     DumpFileToFd(fd, "Secondary panel extra info", "/sys/devices/platform/exynos-drm/secondary-panel/panel_extinfo");
 }
@@ -294,26 +272,6 @@ void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
     }
     dumpRilLogs(fd, destDir);
     dumpNetmgrLogs(destDir);
-}
-
-void Dumpstate::dumpCameraLogs(int fd, const std::string &destDir) {
-    bool cameraLogsEnabled = ::android::base::GetBoolProperty(
-            "vendor.camera.debug.camera_performance_analyzer.attach_to_bugreport", true);
-    if (!cameraLogsEnabled) {
-        return;
-    }
-
-    static const std::string kCameraLogDir = "/data/vendor/camera/profiler";
-    const std::string cameraDestDir = destDir + "/camera";
-
-    RunCommandToFd(fd, "MKDIR CAMERA LOG", {"/vendor/bin/mkdir", "-p", cameraDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-    // Attach multiple latest sessions (in case the user is running concurrent
-    // sessions or starts a new session after the one with performance issues).
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 10, "session-ended-");
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 5, "high-drop-rate-");
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 5, "watchdog-");
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 5, "camera-ended-");
 }
 
 void Dumpstate::dumpLogSection(int fd, int fd_bin)
