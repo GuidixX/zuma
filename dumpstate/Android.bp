@@ -9,27 +9,17 @@ sh_binary {
     sub_dir: "dump",
 }
 
-cc_binary {
-    name: "android.hardware.dumpstate-service.zuma",
-    srcs: [
-        "Dumpstate.cpp",
-        "service.cpp",
-    ],
-    init_rc: ["android.hardware.dumpstate-service.zuma.rc"],
-    vintf_fragments: ["android.hardware.dumpstate-service.zuma.xml"],
-    cflags: [
-        "-Wall",
-        "-Werror",
-    ],
-    shared_libs: [
-        "libbase",
-        "libbinder_ndk",
-        "libcutils",
-        "libdumpstateutil",
-        "liblog",
-        "libutils",
-        "android.hardware.dumpstate-V1-ndk",
-    ],
+sh_binary {
+    name: "dump_power.sh",
+    src: "dump_power.sh",
     vendor: true,
-    relative_install_path: "hw",
+    sub_dir: "dump",
 }
+
+sh_binary {
+    name: "dump_cma.sh",
+    src: "dump_cma.sh",
+    vendor: true,
+    sub_dir: "dump",
+}
+

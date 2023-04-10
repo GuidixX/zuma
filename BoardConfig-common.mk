@@ -39,6 +39,9 @@ BOARD_KERNEL_CMDLINE += cgroup_disable=memory
 BOARD_KERNEL_CMDLINE += rcupdate.rcu_expedited=1 rcu_nocbs=all
 BOARD_KERNEL_CMDLINE += stack_depot_disable=off page_pinner=on
 BOARD_KERNEL_CMDLINE += swiotlb=1024
+# TODO(pcc): Remove this once the shusky kernel is updated with
+# https://android-review.git.corp.google.com/q/topic:%22kasan-mte-sampling-again%22
+BOARD_KERNEL_CMDLINE += kasan=off
 BOARD_BOOTCONFIG += androidboot.boot_devices=13200000.ufs
 
 TARGET_NO_BOOTLOADER := true
@@ -250,12 +253,15 @@ endif
 # SoundTriggerHAL Configuration
 #BOARD_USE_SOUNDTRIGGER_HAL := false
 
+# Vibrator HAL actuator model configuration
+$(call soong_config_set,haptics,actuator_model,$(ACTUATOR_MODEL))
+$(call soong_config_set,haptics,adaptive_haptics_feature,$(ADAPTIVE_HAPTICS_FEATURE))
+
 # HWComposer
 BOARD_HWC_VERSION := hwc3
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := false
 BOARD_HDMI_INCAPABLE := true
 TARGET_USES_HWC2 := true
-HWC_SKIP_VALIDATE := true
 HWC_SUPPORT_RENDER_INTENT := true
 HWC_SUPPORT_COLOR_TRANSFORM := true
 #BOARD_USES_DISPLAYPORT := true

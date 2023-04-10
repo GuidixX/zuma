@@ -21,13 +21,22 @@ include device/google/gs-common/soc/soc.mk
 include device/google/gs-common/modem/modem.mk
 include device/google/gs-common/aoc/aoc.mk
 include device/google/gs-common/trusty/trusty.mk
+include device/google/gs-common/pcie/pcie.mk
 include device/google/gs-common/storage/storage.mk
 include device/google/gs-common/thermal/thermal.mk
+include device/google/gs-common/performance/perf.mk
+include device/google/gs-common/soc/freq.mk
+include device/google/gs-common/gps/dump/log.mk
+include device/google/gs-common/display/dump.mk
+include device/google/gs-common/gxp/dump.mk
+include device/google/gs-common/camera/dump.mk
+include device/google/gs-common/radio/dump.mk
+include device/google/gs-common/gear/dumpstate/aidl.mk
 
 include device/google/zuma/dumpstate/item.mk
 
 ifneq ($(BOARD_WITHOUT_RADIO),true)
-include device/google/gs-common/gps/brcm/device.mk
+include device/google/gs-common/gps/brcm/device_v2.mk
 endif
 
 TARGET_BOARD_PLATFORM := zuma
@@ -135,6 +144,22 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
 	persist.vendor.ril.camp_on_earlier=1
 
+# Enable SET_SCREEN_STATE request
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.ril.enable_set_screen_state=1
+
+# Set the Bluetooth Class of Device
+# Service Field: 0x5A -> 90
+#    Bit 14: LE audio
+#    Bit 17: Networking
+#    Bit 19: Capturing
+#    Bit 20: Object Transfer
+#    Bit 22: Telephony
+# MAJOR_CLASS: 0x42 -> 66 (Phone)
+# MINOR_CLASS: 0x0C -> 12 (Smart Phone)
+PRODUCT_PRODUCT_PROPERTIES += \
+    bluetooth.device.class_of_device=90,66,12
+
 # Set supported Bluetooth profiles to enabled
 PRODUCT_PRODUCT_PROPERTIES += \
 	bluetooth.profile.asha.central.enabled=true \
@@ -232,7 +257,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_VENDOR_PROPERTIES += \
 	ro.opengles.version=196610 \
 	graphics.gpu.profiler.support=true \
-	debug.renderengine.backend=skiaglthreaded \
+	debug.renderengine.backend=skiavkthreaded \
 
 # GRAPHICS - GPU (end)
 # ####################
@@ -388,6 +413,7 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.accelerometer.xml \
 	frameworks/native/data/etc/android.hardware.sensor.barometer.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.barometer.xml \
 	frameworks/native/data/etc/android.hardware.sensor.compass.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.compass.xml \
+	frameworks/native/data/etc/android.hardware.sensor.dynamic.head_tracker.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.dynamic.head_tracker.xml \
 	frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.gyroscope.xml \
 	frameworks/native/data/etc/android.hardware.sensor.hifi_sensors.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.hifi_sensors.xml \
 	frameworks/native/data/etc/android.hardware.sensor.light.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.light.xml\
@@ -429,10 +455,6 @@ include hardware/google/pixel/rebalance_interrupts/rebalance_interrupts.mk
 # PowerStats HAL
 PRODUCT_PACKAGES += \
 	android.hardware.power.stats-service.pixel
-
-# dumpstate HAL
-PRODUCT_PACKAGES += \
-	android.hardware.dumpstate-service.zuma
 
 #
 # Audio HALs
@@ -529,7 +551,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES_DEBUG += \
 	f2fs_io \
 	check_f2fs \
-	f2fsstat \
 	f2fs.fibmap \
 	dump.f2fs
 
@@ -611,6 +632,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	debug.sf.enable_gl_backpressure=1 \
 	debug.sf.enable_sdr_dimming=1
 
+# Camera
+PRODUCT_PROPERTY_OVERRIDES += \
+	vendor.camera.multicam.enable_p23_multicam=true
+
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.use_phase_offsets_as_durations=1
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.late.sf.duration=10500000
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.late.app.duration=16600000
@@ -619,10 +644,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.early.app.duration=16600000
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.earlyGl.sf.duration=16600000
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.earlyGl.app.duration=16600000
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.frame_rate_multiple_threshold=120
-
-# b/258342843: Temporary turn off DSP Saliency and ESP.
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += camera.debug.saliency.use_dsp=0
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.camera.debug.enable_video_sw_denoise=0
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.enable_layer_caching=true
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.set_idle_timer_ms?=80
@@ -706,29 +727,13 @@ PRODUCT_PACKAGES += \
 	libgc2_bw_utils
 
 # 1. Codec 2.0
-# exynos service
-PRODUCT_SOONG_NAMESPACES += vendor/samsung_slsi/codec2
+# for settings used by different C2 hal
+include device/google/gs-common/mediacodec/common/mediacodec_common.mk
+# for Exynos C2 Hal
+include device/google/gs-common/mediacodec/samsung/mediacodec_samsung.mk
 
 PRODUCT_COPY_FILES += \
 	device/google/zuma/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
-
-PRODUCT_PACKAGES += \
-	samsung.hardware.media.c2@1.2-service \
-	codec2.vendor.base.policy \
-	codec2.vendor.ext.policy \
-	libExynosC2ComponentStore \
-	libExynosC2H264Dec \
-	libExynosC2H264Enc \
-	libExynosC2HevcDec \
-	libExynosC2HevcEnc \
-	libExynosC2Mpeg4Dec \
-	libExynosC2Mpeg4Enc \
-	libExynosC2H263Dec \
-	libExynosC2H263Enc \
-	libExynosC2Vp8Dec \
-	libExynosC2Vp8Enc \
-	libExynosC2Vp9Dec \
-	libExynosC2Vp9Enc
 
 PRODUCT_PROPERTY_OVERRIDES += \
        debug.stagefright.c2-poolmask=458752 \
@@ -865,6 +870,16 @@ PRODUCT_PACKAGES_DEBUG += \
 
 PRODUCT_PACKAGES += ShannonRcs
 
+ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
+#ImsMediaAoc library
+FEATURE_TYPE := oem_audio
+SOONG_CONFIG_NAMESPACES += audio_lib
+SOONG_CONFIG_audio_lib += \
+        audio_type
+
+SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
+endif
+
 # ImsMedia
 PRODUCT_PACKAGES += \
 	ImsMediaService \
@@ -950,62 +965,7 @@ PRODUCT_PACKAGES += \
 
 # Audio
 # Audio HAL Server & Default Implementations
-PRODUCT_PACKAGES += \
-	android.hardware.audio.service \
-	android.hardware.audio@7.1-impl \
-	android.hardware.audio.effect@7.0-impl \
-	android.hardware.soundtrigger@2.3-impl \
-	vendor.google.whitechapel.audio.audioext@4.0-impl \
-	android.hardware.bluetooth.audio-impl \
-
-#
-##Audio HAL libraries
-PRODUCT_PACKAGES += \
-	audio.primary.$(TARGET_BOARD_PLATFORM) \
-	audio.platform.aoc \
-	audio_tunnel_aoc \
-	aoc_aud_ext \
-	libaoctuningdecoder \
-	liboffloadeffect \
-	audio_bt_aoc \
-	audio_waves_aoc \
-	audio_fortemedia_aoc \
-	audio_bluenote_aoc \
-	audio_usb_aoc \
-	libamcsextfile \
-	audio_amcs_ext \
-	audio.usb.default \
-	audio.usbv2.default \
-	audio.bluetooth.default \
-	audio.r_submix.default \
-	audio_spk_35l41 \
-	sound_trigger.primary.$(TARGET_BOARD_PLATFORM)
-#	libaoc_waves \
-#
-
-##Audio Vendor libraries
-PRODUCT_PACKAGES += \
-	libfvsam_prm_parser \
-	libmahalcontroller \
-	libAlgFx_HiFi3z
-#
-## AudioHAL Configurations
-PRODUCT_COPY_FILES += \
-	frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration_7_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration_7_0.xml \
-	frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration_7_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration_7_0.xml \
-	frameworks/av/services/audiopolicy/config/hearing_aid_audio_policy_configuration_7_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/hearing_aid_audio_policy_configuration_7_0.xml \
-	frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
-	frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
-        frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
-	frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
-	frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration_7_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration_7_0.xml
-
-##Audio soong
-PRODUCT_SOONG_NAMESPACES += \
-	vendor/google/whitechapel/audio/hal \
-	vendor/google/whitechapel/audio/interfaces
-
-$(call soong_config_set,aoc_audio_board,platform,$(TARGET_BOARD_PLATFORM))
+include device/google/gs-common/audio/hidl_zuma.mk
 
 ## AoC soong
 PRODUCT_SOONG_NAMESPACES += \
@@ -1115,6 +1075,9 @@ endif
 # sscoredump
 include hardware/google/pixel/sscoredump/device.mk
 
+# RadioExt Version
+USES_RADIOEXT_V1_6 = true
+
 # Wifi ext
 include hardware/google/pixel/wifi_ext/device.mk
 
@@ -1134,8 +1097,20 @@ PRODUCT_COPY_FILES += \
 # Call deleteAllKeys if vold detects a factory reset
 PRODUCT_VENDOR_PROPERTIES += ro.crypto.metadata_init_delete_all_keys.enabled?=true
 
+# Use HCTR2 for filenames encryption on adoptable storage.
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.crypto.volume.options=aes-256-xts:aes-256-hctr2
+
 # Hardware Info Collection
 include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
 
 # UFS: the script is used to select the corresponding firmware to run FFU.
 PRODUCT_PACKAGES_DEBUG += ufs_firmware_update.sh
+
+# RIL extension service
+ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
+include device/google/gs-common/pixel_ril/ril.mk
+endif
+
+# Touch service
+include hardware/google/pixel/input/twoshay.mk
