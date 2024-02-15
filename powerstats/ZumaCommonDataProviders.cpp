@@ -19,7 +19,9 @@
 #include <AocStateResidencyDataProvider.h>
 #include <CpupmStateResidencyDataProvider.h>
 #include <DevfreqStateResidencyDataProvider.h>
+#include <DisplayMrrStateResidencyDataProvider.h>
 #include <AdaptiveDvfsStateResidencyDataProvider.h>
+#include <TpuDvfsStateResidencyDataProvider.h>
 #include <UfsStateResidencyDataProvider.h>
 #include <dataproviders/GenericStateResidencyDataProvider.h>
 #include <dataproviders/IioEnergyMeterDataProvider.h>
@@ -32,11 +34,13 @@
 #include <android/binder_manager.h>
 #include <android/binder_process.h>
 #include <log/log.h>
+#include <sys/stat.h>
 
 using aidl::android::hardware::power::stats::AdaptiveDvfsStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::AocStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::CpupmStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::DevfreqStateResidencyDataProvider;
+using aidl::android::hardware::power::stats::DisplayMrrStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::DvfsStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::UfsStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::EnergyConsumerType;
@@ -44,6 +48,7 @@ using aidl::android::hardware::power::stats::GenericStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::IioEnergyMeterDataProvider;
 using aidl::android::hardware::power::stats::PixelStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::PowerStatsEnergyConsumer;
+using aidl::android::hardware::power::stats::TpuDvfsStateResidencyDataProvider;
 
 // TODO (b/181070764) (b/182941084):
 // Remove this when Wifi/BT energy consumption models are available or revert before ship
@@ -177,17 +182,6 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
             path, NS_TO_MS, adpCfgs));
 
     std::vector<DvfsStateResidencyDataProvider::Config> cfgs;
-    cfgs.push_back({"TPU", {
-        std::make_pair("1119MHz", "1119000"),
-        std::make_pair("1066MHz", "1066000"),
-        std::make_pair("967MHz", "967000"),
-        std::make_pair("845MHz", "845000"),
-        std::make_pair("712MHz", "712000"),
-        std::make_pair("627MHz", "627000"),
-        std::make_pair("455MHz", "455000"),
-        std::make_pair("226MHz", "226000"),
-    }});
-
     cfgs.push_back({"AUR", {
         std::make_pair("1065MHz", "1065000"),
         std::make_pair("861MHz", "861000"),
@@ -200,6 +194,20 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
 
     p->addStateResidencyDataProvider(std::make_unique<DvfsStateResidencyDataProvider>(
             path, NS_TO_MS, cfgs));
+
+    // TPU DVFS
+    const int TICK_TO_MS = 100;
+    std::vector<std::string> freqs = {
+            "1119000",
+            "1066000",
+            "845000",
+            "712000",
+            "627000",
+            "455000",
+            "226000"
+    };
+    p->addStateResidencyDataProvider(std::make_unique<TpuDvfsStateResidencyDataProvider>(
+            "/sys/devices/platform/1a000000.rio/tpu_usage", freqs, TICK_TO_MS));
 }
 
 void addSoC(std::shared_ptr<PowerStats> p) {
@@ -612,13 +620,16 @@ void addTPU(std::shared_ptr<PowerStats> p) {
     stateCoeffs = {
         // TODO (b/197721618): Measuring the TPU power numbers
         {"226000",  10},
-        {"627000",  20},
-        {"845000",  30},
-        {"1066000", 40}};
+        {"455000",  20},
+        {"627000",  30},
+        {"712000",  40},
+        {"845000",  50},
+        {"967000",  60},
+        {"1119000", 70}};
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterAndAttrConsumer(p,
-            EnergyConsumerType::OTHER, "TPU", {"S10M_VDD_TPU"},
-            {{UID_TIME_IN_STATE, "/sys/class/edgetpu/edgetpu-soc/device/tpu_usage"}},
+            EnergyConsumerType::OTHER, "TPU", {"S7M_VDD_TPU"},
+            {{UID_TIME_IN_STATE, "/sys/devices/platform/1a000000.rio/tpu_usage"}},
             stateCoeffs));
 }
 
@@ -637,6 +648,11 @@ void addPixelStateResidencyDataProvider(std::shared_ptr<PowerStats> p) {
     pixelSdp->start();
 
     p->addStateResidencyDataProvider(std::move(pixelSdp));
+}
+
+void addDisplayMRR(std::shared_ptr<PowerStats> p) {
+    p->addStateResidencyDataProvider(std::make_unique<DisplayMrrStateResidencyDataProvider>(
+            "Display", "/sys/class/drm/card0/device/primary-panel/"));
 }
 
 void addZumaCommonDataProviders(std::shared_ptr<PowerStats> p) {
@@ -678,6 +694,14 @@ void addNFC(std::shared_ptr<PowerStats> p) {
     cfgs.emplace_back(generateGenericStateResidencyConfigs(nfcStateConfig, nfcStateHeaders),
             "NFC", "NFC subsystem");
 
+    std::string path;
+    struct stat buffer;
+    for (int i = 0; i < 10; i++) {
+        std::string idx = std::to_string(i);
+        path = "/sys/devices/platform/10c80000.hsi2c/i2c-" + idx + "/" + idx + "-0008/power_stats";
+        if (!stat(path.c_str(), &buffer))
+            break;
+    }
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
-            "/sys/devices/platform/10c80000.hsi2c/i2c-6/6-0008/power_stats", cfgs));
+            path, cfgs));
 }

@@ -44,6 +44,7 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     .CodecPath =     "/sys/devices/platform/audiometrics/codec_state",
     .EEPROMPath = "/dev/battery_history",
     .MitigationPath = "/sys/devices/virtual/pmic/mitigation",
+    .MitigationDurationPath = "/sys/devices/virtual/pmic/mitigation/irq_dur_cnt",
     .BrownoutReasonProp = "vendor.brownout_reason",
     .BrownoutLogPath = "/data/vendor/mitigation/lastmeal.txt",
     .SpeakerTemperaturePath = "/sys/devices/platform/audiometrics/speaker_temp",
@@ -59,8 +60,64 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         UFS_ERR_PATH(auto_hibern8_err_count)
     },
     .AmsRatePath = "/sys/devices/platform/audiometrics/ams_rate_read_once",
+    .ThermalStatsPaths = {
+        "/sys/devices/platform/100a0000.BIG/trip_counter",
+        "/sys/devices/platform/100a0000.MID/trip_counter",
+        "/sys/devices/platform/100a0000.LITTLE/trip_counter",
+        "/sys/devices/platform/100b0000.G3D/trip_counter",
+        "/sys/devices/platform/100b0000.TPU/trip_counter",
+        "/sys/devices/platform/100b0000.AUR/trip_counter",
+    },
+    .ResumeLatencyMetricsPath = "/sys/kernel/metrics/resume_latency/resume_latency_metrics",
+    .LongIRQMetricsPath = "/sys/kernel/metrics/irq/long_irq_metrics",
+    .StormIRQMetricsPath = "/sys/kernel/metrics/irq/storm_irq_metrics",
+    .IRQStatsResetPath = "/sys/kernel/metrics/irq/stats_reset",
+    .TempResidencyAndResetPaths = {
+        {
+            "/sys/kernel/metrics/thermal/tr_by_group/tmu/stats",
+            "/sys/kernel/metrics/thermal/tr_by_group/tmu/stats_reset"
+        },
+        {
+            "/sys/kernel/metrics/thermal/tr_by_group/spmic/stats",
+            "/sys/kernel/metrics/thermal/tr_by_group/spmic/stats_reset"
+        }
+    },
     .ModemPcieLinkStatsPath = "/sys/devices/platform/12100000.pcie/link_stats",
-    .WifiPcieLinkStatsPath = "/sys/devices/platform/13120000.pcie/link_stats"
+    .WifiPcieLinkStatsPath = "/sys/devices/platform/13120000.pcie/link_stats",
+    .DisplayStatsPaths = {
+        "/sys/devices/platform/exynos-drm/primary-panel/error_count_te",
+        "/sys/devices/platform/exynos-drm/primary-panel/error_count_unknown",
+        "/sys/devices/platform/exynos-drm/secondary-panel/error_count_te",
+        "/sys/devices/platform/exynos-drm/secondary-panel/error_count_unknown",
+    },
+    .PDMStatePath = "/sys/devices/platform/audiometrics/pdm_state",
+    .WavesPath = "/sys/devices/platform/audiometrics/waves",
+    .AdaptedInfoCountPath = "/sys/devices/platform/audiometrics/adapted_info_active_count",
+    .AdaptedInfoDurationPath = "/sys/devices/platform/audiometrics/adapted_info_active_duration",
+    .CCARatePath = "/sys/devices/platform/audiometrics/cca_count_read_once",
+    .PcmLatencyPath = "/sys/devices/platform/audiometrics/pcm_latency",
+    .PcmCountPath = "/sys/devices/platform/audiometrics/pcm_count",
+    .TotalCallCountPath = "/sys/devices/platform/audiometrics/call_count",
+    .OffloadEffectsIdPath = "/sys/devices/platform/audiometrics/offload_effects_id",
+    .OffloadEffectsDurationPath = "/sys/devices/platform/audiometrics/offload_effects_duration",
+    .BluetoothAudioUsagePath = "/sys/devices/platform/audiometrics/bt_usage",
+    .GMSRPath = "/sys/class/power_supply/maxfg/gmsr",
+    .DisplayPortStatsPaths = {
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_negotiation_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/edid_read_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/dpcd_read_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/edid_invalid_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/sink_count_invalid_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_unstable_failures",
+    },
+    .HDCPStatsPaths = {
+        "/sys/devices/platform/hdcp/hdcp2_success_count",
+        "/sys/devices/platform/hdcp/hdcp2_fallback_count",
+        "/sys/devices/platform/hdcp/hdcp2_fail_count",
+        "/sys/devices/platform/hdcp/hdcp1_success_count",
+        "/sys/devices/platform/hdcp/hdcp1_fail_count",
+        "/sys/devices/platform/hdcp/hdcp0_count",
+    }
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {

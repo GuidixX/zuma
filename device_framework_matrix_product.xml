@@ -1,25 +1,7 @@
-<compatibility-matrix version="1.0" type="framework" level="7">
+<compatibility-matrix version="1.0" type="framework" level="8">
     <hal format="aidl" optional="true">
-        <name>android.hardware.biometrics.face</name>
-        <interface>
-            <name>IFace</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="aidl" optional="true">
-        <name>android.hardware.biometrics.fingerprint</name>
-        <interface>
-            <name>IFingerprint</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="aidl">
-        <name>android.hardware.contexthub</name>
-        <version>1</version>
-        <interface>
-            <name>IContextHub</name>
-            <instance>default</instance>
-        </interface>
+      <name>android.hardware.boot</name>
+      <fqname>IBootControl/default</fqname>
     </hal>
     <hal format="aidl">
         <name>android.hardware.graphics.composer3</name>
@@ -35,14 +17,6 @@
         <interface>
             <name>ISap</name>
             <instance>slot2</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.hardware.radio.config</name>
-        <version>1.1</version>
-        <interface>
-            <name>IRadioConfig</name>
-            <instance>default</instance>
         </interface>
     </hal>
     <hal format="aidl" optional="true">
@@ -102,9 +76,9 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="aidl" optional="true">
+    <hal format="aidl" optional="true" updatable-via-apex="true">
       <name>com.google.face.debug</name>
-        <version>2</version>
+        <version>3-4</version>
         <interface>
             <name>IDebugHost</name>
             <instance>default</instance>
@@ -131,25 +105,18 @@
         </interface>
     </hal>
     <hal format="aidl" optional="true">
+        <name>com.google.edgetpu.tachyon</name>
+        <version>1</version>
+        <interface>
+            <name>IComputeService</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="aidl" optional="true">
       <name>com.google.hardware.pixel.display</name>
-        <version>8</version>
+        <version>10</version>
         <interface>
             <name>IDisplay</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="aidl" optional="true">
-        <name>com.google.input</name>
-        <version>2</version>
-        <interface>
-            <name>ITouchContextService</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="aidl" optional="true">
-        <name>com.google.input.algos.gril</name>
-        <interface>
-            <name>IGrilAntennaTuningService</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -168,33 +135,9 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="hidl">
-        <name>hardware.google.bluetooth.bt_channel_avoidance</name>
-        <version>1.0</version>
-        <interface>
-            <name>IBTChannelAvoidance</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
-        <name>hardware.google.bluetooth.sar</name>
-        <version>1.1</version>
-        <interface>
-            <name>IBluetoothSar</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
-        <name>hardware.google.bluetooth.ccc</name>
-        <version>1.0</version>
-        <interface>
-            <name>IBluetoothCcc</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
     <hal format="aidl" optional="true">
         <name>vendor.google.google_battery</name>
-        <version>2</version>
+        <version>2-3</version>
         <interface>
             <name>IGoogleBattery</name>
             <instance>default</instance>
@@ -210,7 +153,7 @@
     </hal>
     <hal format="aidl" optional="true">
         <name>vendor.google.wifi_ext</name>
-        <version>1</version>
+        <version>2-3</version>
         <interface>
             <name>IWifiExt</name>
             <instance>default</instance>
@@ -224,6 +167,14 @@
             <instance>dm0</instance>
             <instance>dm1</instance>
             <instance>sced0</instance>
+        </interface>
+    </hal>
+    <hal format="aidl" optional="true">
+        <name>com.google.pixel.modem.logmasklibrary</name>
+        <version>1</version>
+        <interface>
+            <name>ILiboemserviceProxy</name>
+            <instance>default</instance>
         </interface>
     </hal>
     <hal format="hidl" optional="true">

@@ -25,12 +25,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.verified_boot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.verified_boot.xml
 
-# Factory OTA
--include vendor/unbundled_google/packages/FactoryOtaPrebuilt/factoryota.mk
-
 # Set system properties identifying the chipset
 PRODUCT_VENDOR_PROPERTIES += ro.soc.manufacturer=Google
-PRODUCT_VENDOR_PROPERTIES += ro.soc.model=ZUMA
+TARGET_VENDOR_PROP += device/google/zuma/vendor.prop
 
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.vendor.testing_battery_profile=2
@@ -47,9 +44,20 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.thermal_warmreset = true
 
+# Trigger fsck on upgrade (305658663)
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.preventative_fsck = 1
+
 # Indicate that the bootloader supports the MTE developer option switch
 # (MISC_MEMTAG_MODE_MEMTAG_ONCE), with the exception of _fullmte products that
 # force enable MTE.
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
+# N.B. persist properties in product Makefiles aren't actually persisted to the data
+# partition, so they will actually go away if we remove them here, or if the user
+# flashes from a normal build to a fullmte build.
+PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
+PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
+PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off
+PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.system_server=off
 endif
