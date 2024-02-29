@@ -89,6 +89,11 @@ LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image.lz4
 # Set the environment variable to switch the Keymint HAL service to Rust
 TRUSTY_KEYMINT_IMPL := rust
 
+ifeq ($(RELEASE_AVF_ENABLE_LLPVM_CHANGES),true)
+	# Set the environment variable to enable the Secretkeeper HAL service.
+	SECRETKEEPER_ENABLED := true
+endif
+
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.oem_unlock_supported=1
@@ -175,26 +180,26 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 # Set supported Bluetooth profiles to enabled
 PRODUCT_PRODUCT_PROPERTIES += \
-	bluetooth.profile.asha.central.enabled=true \
-	bluetooth.profile.a2dp.source.enabled=true \
-	bluetooth.profile.avrcp.target.enabled=true \
-	bluetooth.profile.bap.unicast.server.enabled=true \
-	bluetooth.profile.bas.client.enabled=true \
-	bluetooth.profile.csip.set_coordinator.enabled=true \
-	bluetooth.profile.gatt.enabled=true \
-	bluetooth.profile.hap.client.enabled=true \
-	bluetooth.profile.hfp.ag.enabled=true \
-	bluetooth.profile.hid.device.enabled=true \
-	bluetooth.profile.hid.host.enabled=true \
-	bluetooth.profile.map.server.enabled=true \
-	bluetooth.profile.mcp.server.enabled=true \
-	bluetooth.profile.opp.enabled=true \
-	bluetooth.profile.pan.nap.enabled=true \
-	bluetooth.profile.pan.panu.enabled=true \
-	bluetooth.profile.pbap.server.enabled=true \
-	bluetooth.profile.sap.server.enabled=true \
-	bluetooth.profile.tbs.server.enabled=true \
-	bluetooth.profile.vc.server.enabled=true
+	bluetooth.profile.asha.central.enabled?=true \
+	bluetooth.profile.a2dp.source.enabled?=true \
+	bluetooth.profile.avrcp.target.enabled?=true \
+	bluetooth.profile.bap.unicast.server.enabled?=true \
+	bluetooth.profile.bas.client.enabled?=true \
+	bluetooth.profile.csip.set_coordinator.enabled?=true \
+	bluetooth.profile.gatt.enabled?=true \
+	bluetooth.profile.hap.client.enabled?=true \
+	bluetooth.profile.hfp.ag.enabled?=true \
+	bluetooth.profile.hid.device.enabled?=true \
+	bluetooth.profile.hid.host.enabled?=true \
+	bluetooth.profile.map.server.enabled?=true \
+	bluetooth.profile.mcp.server.enabled?=true \
+	bluetooth.profile.opp.enabled?=true \
+	bluetooth.profile.pan.nap.enabled?=true \
+	bluetooth.profile.pan.panu.enabled?=true \
+	bluetooth.profile.pbap.server.enabled?=true \
+	bluetooth.profile.sap.server.enabled?=true \
+	bluetooth.profile.tbs.server.enabled?=true \
+	bluetooth.profile.vc.server.enabled?=true
 
 # Carrier configuration default location
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -833,7 +838,7 @@ PRODUCT_SOONG_NAMESPACES += \
 	vendor/google/trusty/common
 
 PRODUCT_PACKAGES += \
- 	trusty_metricsd
+	trusty_metricsd
 
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 PRODUCT_PACKAGES += \
@@ -909,21 +914,6 @@ $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHA
 PRODUCT_PACKAGES += ShannonIms
 
 PRODUCT_PACKAGES += ShannonRcs
-
-ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
-#ImsMediaAoc library
-FEATURE_TYPE := oem_audio
-SOONG_CONFIG_NAMESPACES += audio_lib
-SOONG_CONFIG_audio_lib += \
-        audio_type
-
-SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
-endif
-
-# ImsMedia
-PRODUCT_PACKAGES += \
-	ImsMediaService \
-	libimsmedia
 
 # Exynos RIL and telephony
 # Multi SIM(DSDS)
