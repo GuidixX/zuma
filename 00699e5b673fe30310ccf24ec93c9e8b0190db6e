@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5056426_e97a5215",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-03-25T22:52:26Z",
+      "side": 1,
+      "message": "I would say \"Remove PRODUCT_MAX_PAGE_SIZE_SUPPORTED, now 16kB\" so it\u0027s clear this is the CL that changes it.",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 58
+      },
+      "revId": "00699e5b673fe30310ccf24ec93c9e8b0190db6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
