@@ -215,6 +215,7 @@ USE_LASSEN_OEMHOOK := true
 
 # Use for GRIL
 USES_LASSEN_MODEM := true
+$(call inherit-product-if-exists, vendor/google/products/gril.mk)
 
 ifeq ($(USES_GOOGLE_DIALER_CARRIER_SETTINGS),true)
 USE_GOOGLE_DIALER := true
