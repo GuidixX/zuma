@@ -932,6 +932,8 @@ PRODUCT_PACKAGES += \
 # Multi SIM(DSDS)
 SIM_COUNT := 2
 SUPPORT_MULTI_SIM := true
+$(call soong_config_set,sim,support_multi_sim,$(SUPPORT_MULTI_SIM))
+
 # Support NR
 SUPPORT_NR := true
 # Support 5G on both stacks
