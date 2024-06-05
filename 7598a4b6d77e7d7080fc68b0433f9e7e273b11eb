@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0ce047b_c126182b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1307893
+      },
+      "writtenOn": "2024-06-05T08:26:29Z",
+      "side": 1,
+      "message": "Please use `topic` to link the changes that need to be submitted together.",
+      "revId": "7598a4b6d77e7d7080fc68b0433f9e7e273b11eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
