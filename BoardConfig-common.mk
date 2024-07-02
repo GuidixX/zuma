@@ -230,6 +230,9 @@ TARGET_COPY_OUT_SYSTEM_DLKM := system_dlkm
 
 # Testing related defines
 BOARD_PERFSETUP_SCRIPT := platform_testing/scripts/perf-setup/p23-setup.sh
+# Customize BOARD_PERFSETUP_SCRIPT for perf-setup in platform_testing/scripts/perf-setup/Android.bp
+# Note: BOARD_PERFSETUP_SCRIPT must under platform_testing/scripts/perf-setup/.
+$(call soong_config_set,perf,board_perfsetup_script,$(notdir $(BOARD_PERFSETUP_SCRIPT)))
 
 #
 # AUDIO & VOICE
