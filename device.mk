@@ -92,6 +92,10 @@ TRUSTY_KEYMINT_IMPL := rust
 ifeq ($(RELEASE_AVF_ENABLE_LLPVM_CHANGES),true)
 	# Set the environment variable to enable the Secretkeeper HAL service.
 	SECRETKEEPER_ENABLED := true
+	# TODO: Enable Secretkeeper unconditionally once AOSP targets are built with BL from 24Q3+.
+	ifneq (,$(filter aosp_%,$(TARGET_PRODUCT)))
+		SECRETKEEPER_ENABLED := false
+	endif
 endif
 
 # OEM Unlock reporting
