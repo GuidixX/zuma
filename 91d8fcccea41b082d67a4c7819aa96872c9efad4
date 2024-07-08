@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fed1ed95_be5bdfd0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1897307
+      },
+      "writtenOn": "2024-07-08T11:37:44Z",
+      "side": 1,
+      "message": "The patch require \"Performance\" review too. Can anyone +2, The patch removed a package from aosp builds, hence should not have any negative effect on performance.",
+      "revId": "91d8fcccea41b082d67a4c7819aa96872c9efad4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
