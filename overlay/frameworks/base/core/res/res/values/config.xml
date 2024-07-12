@@ -315,4 +315,8 @@
 
     <!-- Pre-scale volume at volume step 3 for Absolute Volume -->
     <fraction name="config_prescaleAbsoluteVolume_index3">100%</fraction>
+
+        <!-- Enable virtual DSDA -->
+    <bool name="enable_virtual_dsda">true</bool>
+
 </resources>
