@@ -44,9 +44,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.thermal_warmreset = true
 
-# Set the max page size to 4096 (b/300367402)
-PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
-
 # Trigger fsck on upgrade (305658663)
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.preventative_fsck = 1
@@ -56,6 +53,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # force enable MTE.
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
+# N.B. persist properties in product Makefiles aren't actually persisted to the data
+# partition, so they will actually go away if we remove them here, or if the user
+# flashes from a normal build to a fullmte build.
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off

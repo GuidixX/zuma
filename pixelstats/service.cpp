@@ -97,12 +97,45 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     .CCARatePath = "/sys/devices/platform/audiometrics/cca_count_read_once",
     .PcmLatencyPath = "/sys/devices/platform/audiometrics/pcm_latency",
     .PcmCountPath = "/sys/devices/platform/audiometrics/pcm_count",
-    .TotalCallCountPath = "/sys/devices/platform/audiometrics/call_count"
+    .TotalCallCountPath = "/sys/devices/platform/audiometrics/call_count",
+    .OffloadEffectsIdPath = "/sys/devices/platform/audiometrics/offload_effects_id",
+    .OffloadEffectsDurationPath = "/sys/devices/platform/audiometrics/offload_effects_duration",
+    .BluetoothAudioUsagePath = "/sys/devices/platform/audiometrics/bt_usage",
+    .GMSRPath = {
+        "/sys/class/power_supply/maxfg/gmsr",
+        "/sys/class/power_supply/maxfg_base/gmsr",
+    },
+    .DisplayPortStatsPaths = {
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_negotiation_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/edid_read_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/dpcd_read_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/edid_invalid_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/sink_count_invalid_failures",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_unstable_failures",
+    },
+    .HDCPStatsPaths = {
+        "/sys/devices/platform/hdcp/hdcp2_success_count",
+        "/sys/devices/platform/hdcp/hdcp2_fallback_count",
+        "/sys/devices/platform/hdcp/hdcp2_fail_count",
+        "/sys/devices/platform/hdcp/hdcp1_success_count",
+        "/sys/devices/platform/hdcp/hdcp1_fail_count",
+        "/sys/devices/platform/hdcp/hdcp0_count",
+    }
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
         .AudioUevent = "/devices/virtual/amcs/amcs",
-        .TypeCPartnerUevent = "PRODUCT_TYPE="};
+        .TypeCPartnerUevent = "PRODUCT_TYPE=",
+        .FGLearningPath = {
+            "/sys/class/power_supply/maxfg/fg_learning_events",
+            "/sys/class/power_supply/maxfg_base/fg_learning_events"
+        },
+        .FwUpdatePath = "",
+        .FGModelLoadingPath = {
+            "/sys/class/power_supply/maxfg/m5_model_state",
+            "/sys/class/power_supply/maxfg_base/m5_model_state"
+        }
+};
 
 int main() {
     LOG(INFO) << "starting PixelStats";
