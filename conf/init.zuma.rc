@@ -306,6 +306,9 @@ on init
     write /proc/vendor_sched/groups/nnapi/prefer_idle 0
     write /proc/vendor_sched/groups/nnapi/uclamp_min 512
 
+    # Set general CPU min frequency
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 820000
+
     # Add memlat governor settings
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu0_memlat@17000010/polling_interval 10
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu1_memlat@17000010/polling_interval 10
