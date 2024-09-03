@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e27b736a_75b31549",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1292830
+      },
+      "writtenOn": "2024-09-03T08:13:36Z",
+      "side": 1,
+      "message": "need to consider impact with different kernel versions.",
+      "revId": "e389f13895be439da676f9af052d1972fe47e4bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
