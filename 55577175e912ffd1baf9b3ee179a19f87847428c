@@ -16,6 +16,24 @@
       "message": "This is going to affect codegen for everything shipped on the device, is it worth flagging?",
       "revId": "55577175e912ffd1baf9b3ee179a19f87847428c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b96d3695_b2acc409",
+        "filename": "BoardConfig-common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2024-09-05T17:39:43Z",
+      "side": 1,
+      "message": "yeah, things like pac/bti and sve have been controversial in the past. see the comment thread on https://android-review.git.corp.google.com/c/platform/build/soong/+/2292699 for example. i think there are actually a few buganizer bugs specifically about making this change for zuma, where the device owners decided against...",
+      "parentUuid": "7e64aa3e_2e2f0986",
+      "revId": "55577175e912ffd1baf9b3ee179a19f87847428c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
