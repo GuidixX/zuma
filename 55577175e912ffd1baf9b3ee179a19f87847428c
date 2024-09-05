@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e64aa3e_2e2f0986",
+        "filename": "BoardConfig-common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2024-09-05T17:34:43Z",
+      "side": 1,
+      "message": "This is going to affect codegen for everything shipped on the device, is it worth flagging?",
+      "revId": "55577175e912ffd1baf9b3ee179a19f87847428c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
