@@ -105,6 +105,16 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         "/sys/class/power_supply/maxfg/gmsr",
         "/sys/class/power_supply/maxfg_base/gmsr",
     },
+    .FGModelLoadingPath = {
+        "/sys/class/power_supply/maxfg/m5_model_state",
+        "/sys/class/power_supply/maxfg_base/m5_model_state"
+    },
+    .FGLogBufferPath = {
+        "/dev/logbuffer_maxfg_monitor",
+        "/dev/logbuffer_max77779fg_monitor",
+        "/dev/logbuffer_maxfg_base_monitor",
+        "/dev/logbuffer_maxfg_secondary_monitor"
+    },
     .DisplayPortStatsPaths = {
         "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_negotiation_failures",
         "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/edid_read_failures",
@@ -120,21 +130,14 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         "/sys/devices/platform/hdcp/hdcp1_success_count",
         "/sys/devices/platform/hdcp/hdcp1_fail_count",
         "/sys/devices/platform/hdcp/hdcp0_count",
-    }
+    },
+    .SpeakerVersionPath = "/sys/devices/platform/audiometrics/speaker_version"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
         .AudioUevent = "/devices/virtual/amcs/amcs",
         .TypeCPartnerUevent = "PRODUCT_TYPE=",
-        .FGLearningPath = {
-            "/sys/class/power_supply/maxfg/fg_learning_events",
-            "/sys/class/power_supply/maxfg_base/fg_learning_events"
-        },
-        .FwUpdatePath = "",
-        .FGModelLoadingPath = {
-            "/sys/class/power_supply/maxfg/m5_model_state",
-            "/sys/class/power_supply/maxfg_base/m5_model_state"
-        }
+        .FwUpdatePath = ""
 };
 
 int main() {
