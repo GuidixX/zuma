@@ -602,6 +602,11 @@ ScopedAStatus Usb::switchRole(const string& in_portName, const PortRole& in_role
         fp = fopen(filename.c_str(), "w");
         if (fp != NULL) {
             int ret = fputs(convertRoletoString(in_role).c_str(), fp);
+            if (ret == EAGAIN) {
+                ALOGI("role switch busy, retry in %d ms", ROLE_SWAP_RETRY_MS);
+                std::this_thread::sleep_for(std::chrono::milliseconds(ROLE_SWAP_RETRY_MS));
+                ret = fputs(convertRoletoString(in_role).c_str(), fp);
+            }
             fclose(fp);
             if ((ret != EOF) && ReadFileToString(filename, &written)) {
                 written = Trim(written);
@@ -1724,8 +1729,10 @@ void *displayPortPollWork(void *param) {
                 std::vector<PortStatus> currentPortStatus;
                 ret = read(usb->mDisplayPortDebounceTimer, &res, sizeof(res));
                 ALOGI("usbdp: dp debounce triggered, val:%lu ret:%d", res, ret);
-                if (ret < 0)
-                    ALOGE("usbdp: debounce read errno:%d", errno);
+                if (ret < 0) {
+                    ALOGW("usbdp: debounce read error:%d", errno);
+                    continue;
+                }
                 queryVersionHelper(usb, &currentPortStatus);
             } else if (events[n].data.fd == usb->mDisplayPortActivateTimer) {
                 string activePartner, activePort;
@@ -1776,6 +1783,7 @@ void *displayPortPollWork(void *param) {
 
 error:
     /* Need to disarm so new threads don't get old event */
+    armTimerFdHelper(usb->mDisplayPortDebounceTimer, 0);
     armTimerFdHelper(usb->mDisplayPortActivateTimer, 0);
     close(link_training_status_fd);
 link_training_status_fd_error:
