@@ -57,6 +57,30 @@
       ],
       "revId": "c18ed7ba19c37f40b75e1f85f8aff69998945297",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffe45107_6cd202b7",
+        "filename": "powerstats/ZumaCommonDataProviders.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2024-09-13T17:04:18Z",
+      "side": 1,
+      "message": "Done. I\u0027m not sure what happened there -- I used vim, which I normally don\u0027t use, so maybe I hit the wrong key.",
+      "parentUuid": "ad50c577_2b1607d1",
+      "range": {
+        "startLine": 285,
+        "startChar": 45,
+        "endLine": 285,
+        "endChar": 46
+      },
+      "revId": "c18ed7ba19c37f40b75e1f85f8aff69998945297",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
