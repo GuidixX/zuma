@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad50c577_2b1607d1",
+        "filename": "powerstats/ZumaCommonDataProviders.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1859295
+      },
+      "writtenOn": "2024-09-13T07:45:29Z",
+      "side": 1,
+      "message": "Should be s2mpg14-odpm.",
+      "range": {
+        "startLine": 285,
+        "startChar": 45,
+        "endLine": 285,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3b388b6d_622ce96d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "powerstats/ZumaCommonDataProviders.cpp",
+              "range": {
+                "startLine": 285,
+                "startChar": 0,
+                "endLine": 286,
+                "endChar": 0
+              },
+              "replacement": "    std::vector\u003cstd::string\u003e deviceNames { \"s2mpg14-odpm\", \"s2mpg15-odpm\" };\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c18ed7ba19c37f40b75e1f85f8aff69998945297",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
