@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "29aa926e_e5653a2c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1859295
+      },
+      "writtenOn": "2024-09-13T08:01:22Z",
+      "side": 1,
+      "message": "LGTM. Please fix my another comment in this change before submitting.",
+      "revId": "c18ed7ba19c37f40b75e1f85f8aff69998945297",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ad50c577_2b1607d1",
