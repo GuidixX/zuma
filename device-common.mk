@@ -48,10 +48,14 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.preventative_fsck = 1
 
+# Enable MTE in -eng builds.
+include device/google/gs-common/mte/eng-has-mte.mk
+
 # Indicate that the bootloader supports the MTE developer option switch
 # (MISC_MEMTAG_MODE_MEMTAG_ONCE), with the exception of _fullmte products that
-# force enable MTE.
+# force enable MTE, or when PRODUCT_ENG_VARIANT_WITH_MEMTAG is set.
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
+ifneq ($(PRODUCT_ENG_VARIANT_WITH_MEMTAG),true)
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
 # N.B. persist properties in product Makefiles aren't actually persisted to the data
 # partition, so they will actually go away if we remove them here, or if the user
@@ -60,4 +64,10 @@ PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.system_server=off
+endif
+endif
+
+ifeq ($(PRODUCT_ENG_VARIANT_WITH_MEMTAG),true)
+PRODUCT_COPY_FILES += \
+       device/google/zuma/conf/init.eng.memtag.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.eng.memtag.rc
 endif
